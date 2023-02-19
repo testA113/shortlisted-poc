@@ -14,9 +14,9 @@ export default function Home() {
         >
           <h1 className={inter.className}>Shortlisted.ai</h1>
           <p>
-            To get you shortlisted for your role, we give you custom AI
-            generated feedback on your resume, tailored for each job that you
-            apply for.
+            To get shortlisted for your role, we give you custom feedback on
+            your resume. Powered by ChatGPT, we tailor feedback for each job
+            that you apply for.
           </p>
         </div>
         <div className="prose text-center">

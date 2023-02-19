@@ -1,6 +1,9 @@
 "use client";
 import clsx from "clsx";
+import { CheckCircle2 } from "lucide-react";
 import { HTMLProps, ReactNode, Ref, useState } from "react";
+
+import { FormError } from "../FormError";
 
 interface Props extends HTMLProps<HTMLInputElement> {
   children: ReactNode;
@@ -9,6 +12,7 @@ interface Props extends HTMLProps<HTMLInputElement> {
   className?: string;
   accept?: string;
   color?: string;
+  error?: string;
 }
 
 export function UploadButton({
@@ -19,6 +23,7 @@ export function UploadButton({
   accept = ".pdf",
   color = "bg-yellow-300",
   onChange,
+  error,
   ...inputProps
 }: Props) {
   const [fileName, setFileName] = useState("");
@@ -38,7 +43,7 @@ export function UploadButton({
             if (e.target.files) {
               const file = e.target.files[0];
               if (file.size > maxFileSize * 1024 * 1024) {
-                alert("File is too big!");
+                alert(`File is too big! Max size is ${maxFileSize}MB.`);
                 e.preventDefault();
                 return;
               }
@@ -65,7 +70,13 @@ export function UploadButton({
           {children}
         </span>
       </label>
-      {fileName && <p>{fileName}</p>}
+      {fileName && (
+        <span className="my-1 flex items-center gap-1">
+          <CheckCircle2 className="h-4 text-green-700" />
+          {fileName}
+        </span>
+      )}
+      <FormError error={error} />
     </div>
   );
 }

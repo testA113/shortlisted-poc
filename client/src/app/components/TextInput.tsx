@@ -1,15 +1,19 @@
 import React, { HTMLProps, Ref } from "react";
 
+import { FormError } from "./FormError";
+
 interface Props extends HTMLProps<HTMLInputElement> {
   labelText: string;
   innerRef?: Ref<HTMLInputElement>;
   className?: string;
+  error?: string;
 }
 
 export function TextInput({
   labelText,
   innerRef,
   className,
+  error,
   ...inputProps
 }: Props) {
   return (
@@ -26,6 +30,7 @@ export function TextInput({
         ref={innerRef}
         {...inputProps}
       />
+      <FormError error={error} />
     </div>
   );
 }
