@@ -3,8 +3,6 @@ import clsx from "clsx";
 import { CheckCircle2 } from "lucide-react";
 import { HTMLProps, ReactNode, Ref, useState } from "react";
 
-import { FormError } from "../FormError";
-
 interface Props extends HTMLProps<HTMLInputElement> {
   children: ReactNode;
   innerRef?: Ref<HTMLInputElement>;
@@ -23,7 +21,6 @@ export function UploadButton({
   accept = ".pdf",
   color = "bg-yellow-300",
   onChange,
-  error,
   ...inputProps
 }: Props) {
   const [fileName, setFileName] = useState("");
@@ -70,13 +67,12 @@ export function UploadButton({
           {children}
         </span>
       </label>
-      {fileName && (
+      <div className={fileName ? "" : "invisible"}>
         <span className="my-1 flex items-center gap-1">
           <CheckCircle2 className="h-4 text-green-700" />
-          {fileName}
+          {fileName || "No file selected"}
         </span>
-      )}
-      <FormError error={error} />
+      </div>
     </div>
   );
 }

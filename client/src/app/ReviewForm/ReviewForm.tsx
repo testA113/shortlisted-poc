@@ -11,9 +11,9 @@ const schema = z.object({
   file: z.instanceof(FileList, "Must be a FileList"),
   url: z
     .string()
-    .url()
+    .url("Must be a Seek job URL")
     .regex(
-      /^https:\/\/www\.seek\.co\.nz\/job\/\d+(?:\?.*)?$/,
+      /^(?:https?:\/\/)?(?:[^./]+\.)?seek\.co\.nz\/job\/\d+(?:\?.*)?$/,
       "Must be a Seek job URL"
     ),
 });
@@ -25,7 +25,7 @@ export function ReviewForm() {
     register,
     handleSubmit,
     formState: { isValid, errors },
-  } = useForm<Schema>({ resolver: zodResolver(schema), mode: "onBlur" });
+  } = useForm<Schema>({ resolver: zodResolver(schema), mode: "onTouched" });
   const { ref: fileRef, onChange, ...fileRest } = register("file");
   const { ref: urlRef, ...urlRest } = register("url");
 
@@ -42,10 +42,9 @@ export function ReviewForm() {
       <h2>Step 1:</h2>
       <UploadButton
         accept=".pdf"
-        color="bg-gray-300"
+        color="bg-cyan-200"
         innerRef={fileRef}
         onChange={onChange}
-        error={errors.file?.message}
         {...fileRest}
       >
         <Upload />

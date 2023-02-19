@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React, { HTMLProps, Ref } from "react";
 
 import { FormError } from "./FormError";
@@ -26,7 +27,10 @@ export function TextInput({
       </label>
 
       <input
-        className="mt-2 w-full border-2 border-dashed border-black p-2 text-lg focus:border-solid focus:border-black focus-visible:outline-none"
+        className={clsx(
+          error ? "bg-red-100" : "bg-gray-100",
+          "mt-2 w-full border-2 border-dashed border-black p-2 text-lg transition duration-200 ease-out focus:border-solid focus:border-black focus-visible:outline-none"
+        )}
         ref={innerRef}
         {...inputProps}
       />
