@@ -1,10 +1,13 @@
 "use client";
 import clsx from "clsx";
 import { CheckCircle2 } from "lucide-react";
-import { HTMLProps, ReactNode, Ref, useState } from "react";
+import { Dispatch, HTMLProps, ReactNode, Ref, SetStateAction } from "react";
+import { FormError } from "../FormError";
 
 interface Props extends HTMLProps<HTMLInputElement> {
   children: ReactNode;
+  fileName: string;
+  setFileName: Dispatch<SetStateAction<string>>;
   innerRef?: Ref<HTMLInputElement>;
   maxFileSize?: number;
   className?: string;
@@ -15,16 +18,17 @@ interface Props extends HTMLProps<HTMLInputElement> {
 
 export function UploadButton({
   children,
+  fileName,
+  setFileName,
   innerRef,
   maxFileSize = 5,
   className,
   accept = ".pdf",
   color = "bg-yellow-300",
   onChange,
+  error,
   ...inputProps
 }: Props) {
-  const [fileName, setFileName] = useState("");
-
   return (
     <div className="flex flex-col items-center">
       <label
@@ -67,6 +71,7 @@ export function UploadButton({
           {children}
         </span>
       </label>
+      {error && <FormError error={error} />}
       <div className={fileName ? "" : "invisible"}>
         <span className="my-1 flex items-center gap-1">
           <CheckCircle2 className="h-4 text-green-700" />

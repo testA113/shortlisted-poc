@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { Button, UploadButton } from "../components/Button";
 import { TextInput } from "../components/TextInput";
+import { useState } from "react";
 
 const schema = z.object({
   file: z.instanceof(FileList, "Must be a FileList"),
@@ -21,6 +22,7 @@ const schema = z.object({
 type Schema = z.infer<typeof schema>;
 
 export function ReviewForm() {
+  const [fileName, setFileName] = useState("");
   const {
     register,
     handleSubmit,
@@ -45,6 +47,9 @@ export function ReviewForm() {
         color="bg-cyan-200"
         innerRef={fileRef}
         onChange={onChange}
+        fileName={fileName}
+        setFileName={setFileName}
+        error={fileName ? errors.file?.message : "Please upload a resume"}
         {...fileRest}
       >
         <Upload />
@@ -54,13 +59,13 @@ export function ReviewForm() {
       <TextInput
         labelText="URL to Seek job listing"
         placeholder="e.g. https://www.seek.co.nz/job/12345678"
-        className="w-80"
+        className="w-96"
         innerRef={urlRef}
         error={errors.url?.message}
         {...urlRest}
       />
       <h2>Step 3:</h2>
-      <Button type="submit" disabled={!isValid}>
+      <Button type="submit" disabled={!isValid || !fileName}>
         Get shortlisted
       </Button>
     </form>
