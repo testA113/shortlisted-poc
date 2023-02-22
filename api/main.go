@@ -108,7 +108,7 @@ func main() {
 	}))
 	r.POST("/api/review", func(c *gin.Context) {
 		review(c.Writer, c.Request)
-		c.String(http.StatusOK, "pong")
+		c.String(http.StatusOK, "")
 	})
 	r.Run(":8080")
 }
