@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { Button, UploadButton } from "../components/Button";
 import { TextInput } from "../components/TextInput";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const schema = z.object({
   file: z.instanceof(FileList, "Must be a FileList"),
@@ -30,17 +30,23 @@ export function ReviewForm() {
   } = useForm<Schema>({ resolver: zodResolver(schema), mode: "onTouched" });
   const { ref: fileRef, onChange, ...fileRest } = register("file");
   const { ref: urlRef, ...urlRest } = register("url");
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const onSubmit: SubmitHandler<Schema> = (data) => {
+  const onSubmit: SubmitHandler<Schema> = async (data) => {
     const file = data.file[0];
     const url = data.url;
-    console.log(file.name);
-    console.log(url);
-    console.log("submitting");
+    if (formRef.current) {
+      console.log(file.name);
+      console.log(url);
+      await fetch("http://localhost:8080/api/review", {
+        body: new FormData(formRef.current),
+        method: "POST",
+      });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
       <h2>Step 1:</h2>
       <UploadButton
         accept=".pdf"

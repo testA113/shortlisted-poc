@@ -72,12 +72,14 @@ export function UploadButton({
         </span>
       </label>
       {error && <FormError error={error} />}
-      <div className={fileName ? "" : "invisible"}>
-        <span className="my-1 flex items-center gap-1">
-          <CheckCircle2 className="h-4 text-green-700" />
-          {fileName || "No file selected"}
-        </span>
-      </div>
+      {fileName && (
+        <div className={fileName ? "" : "invisible"}>
+          <span className="my-1 flex items-center gap-1">
+            <CheckCircle2 className="h-4 text-green-700" />
+            {fileName || "No file selected"}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
