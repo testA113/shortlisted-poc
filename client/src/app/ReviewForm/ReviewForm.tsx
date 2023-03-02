@@ -28,6 +28,7 @@ export function ReviewForm() {
     handleSubmit,
     formState: { isValid, errors },
   } = useForm<Schema>({ resolver: zodResolver(schema), mode: "onTouched" });
+  const [isLoading, setIsLoading] = useState(false);
   const { ref: fileRef, onChange, ...fileRest } = register("file");
   const { ref: urlRef, ...urlRest } = register("url");
   const formRef = useRef<HTMLFormElement>(null);
@@ -38,10 +39,17 @@ export function ReviewForm() {
     if (formRef.current) {
       console.log(file.name);
       console.log(url);
-      await fetch("http://localhost:8080/api/review", {
-        body: new FormData(formRef.current),
-        method: "POST",
-      });
+      setIsLoading(true);
+      try {
+        await fetch("http://localhost:8080/api/review", {
+          body: new FormData(formRef.current),
+          method: "POST",
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -71,7 +79,11 @@ export function ReviewForm() {
         {...urlRest}
       />
       <h2>Step 3:</h2>
-      <Button type="submit" disabled={!isValid || !fileName}>
+      <Button
+        type="submit"
+        disabled={!isValid || !fileName}
+        isLoading={isLoading}
+      >
         Get shortlisted
       </Button>
     </form>

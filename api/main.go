@@ -20,7 +20,7 @@ func review(w gin.ResponseWriter, r *http.Request) {
 	fmt.Println("method:", r.Method) //get request method
 
 	// Parse our multipart form, 10 << 20 specifies a maximum
-	// upload of 10 MB files.
+	// upload of 5 MB files.
 	r.ParseMultipartForm(5 << 20)
 	// FormFile returns the first file for the given key `myFile`
 	// it also returns the FileHeader so we can get the Filename,
@@ -80,22 +80,26 @@ func review(w gin.ResponseWriter, r *http.Request) {
 	jobInfo, _ := ioutil.ReadAll(response.Body)
 
 	// call open ai to suggest changes to the resume
-	gptPrompt := fmt.Sprintf("I have a job listing that I want you to understand. With it, I will send you information about my resume section by section. For example my experience then education, then achievements. You must act as a career coach and resume reviewer to give constructive feedback on each section to help me get this job (generate a bullet point list of changes to the whole section that will be helpful - speak as if you are talking directly to the job candidate). If there is missing experience for this job, please reccomend courses that will help get the job, or jobs that I could get which help me get experience for a job like the one in this listing. The job listing is:\n```\n%s\n```\nThe resume is: \n```\n%s\n```\n ADVICE:", string(jobInfo), resume.Body)
+	gptPrompt := fmt.Sprintf("I have a job listing that I want you to understand. With it, I will send you information about my resume section by section. For example my experience then education, then achievements. You must act as a career coach and resume reviewer to give constructive feedback on each section to help me get this job (generate a bullet point list of changes to the whole section that will be helpful - speak as if you are talking directly to the job candidate). If there is missing experience for this job, please reccomend courses that will help get the job, or jobs that I could get which help me get experience for a job like the one in this listing. Give your answer in markdown format. The job listing is:\n```\n%s\n```\nThe resume is: \n```\n%s\n```\n ADVICE:", string(jobInfo), resume.Body)
 	fmt.Println(gptPrompt)
 	c := gogpt.NewClient(os.Getenv("OPENAI_API_KEY"))
-	req := gogpt.CompletionRequest{
-		Model:     gogpt.GPT3TextDavinci003,
+
+	systemMessage := gogpt.ChatCompletionMessage{Role: "system", Content: "You are a career coach. I'm going to give you a resume and a job description and you should give feedback on how to improve it. I'll start with the experience section."}
+	reviewMessage := gogpt.ChatCompletionMessage{Role: "user", Content: gptPrompt}
+
+	req := gogpt.ChatCompletionRequest{
+		Model:     gogpt.GPT3Dot5Turbo,
+		Messages:  []gogpt.ChatCompletionMessage{systemMessage, reviewMessage},
 		MaxTokens: 2500,
-		Prompt:    gptPrompt,
 	}
-	resp, err := c.CreateCompletion(context.Background(), req)
+	resp, err := c.CreateChatCompletion(context.Background(), req)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(resp.Choices[0].Text)
+	fmt.Println(resp)
 
-	w.Write([]byte(resp.Choices[0].Text))
+	w.Write([]byte(resp.Choices[0].Message.Content))
 }
 
 func main() {
