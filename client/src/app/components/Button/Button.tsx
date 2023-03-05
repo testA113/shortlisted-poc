@@ -5,6 +5,7 @@ import React, { HTMLProps, ReactNode } from "react";
 interface Props extends HTMLProps<HTMLButtonElement> {
   children: ReactNode;
   isLoading?: boolean;
+  loadingText?: ReactNode;
   type?: "button" | "submit" | "reset";
   color?: string;
   onClick?: () => void;
@@ -14,6 +15,7 @@ interface Props extends HTMLProps<HTMLButtonElement> {
 export function Button({
   children,
   isLoading,
+  loadingText,
   type = "button",
   color = "bg-yellow-300",
   onClick,
@@ -42,11 +44,11 @@ export function Button({
       <span
         className={clsx(
           className,
-          "relative flex gap-2 border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
+          "relative flex items-center justify-center gap-2 border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
         )}
       >
-        {isLoading && <Loader2 className="animate-spin" />}
-        {children}
+        {isLoading && <Loader2 className="h-4 animate-spin" />}
+        {isLoading && loadingText ? loadingText : children}
       </span>
     </button>
   );

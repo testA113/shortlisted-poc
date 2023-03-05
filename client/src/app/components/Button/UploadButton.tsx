@@ -44,7 +44,9 @@ export function UploadButton({
             if (e.target.files) {
               const file = e.target.files[0];
               if (file.size > maxFileSize * 1024 * 1024) {
-                alert(`File is too big! Max size is ${maxFileSize}MB.`);
+                alert(
+                  `Hey! Your file is too big! Upload a file less than ${maxFileSize}MB.`
+                );
                 e.preventDefault();
                 return;
               }
@@ -65,7 +67,7 @@ export function UploadButton({
         <span
           className={clsx(
             className,
-            "relative flex cursor-pointer gap-2 border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
+            "relative flex cursor-pointer items-center justify-center gap-2 border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-black group-active:text-opacity-75"
           )}
         >
           {children}
