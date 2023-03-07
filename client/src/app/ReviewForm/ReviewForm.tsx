@@ -70,7 +70,7 @@ export function ReviewForm() {
       <TextInput
         labelText="URL to Seek job listing"
         placeholder="e.g. https://www.seek.co.nz/job/12345678"
-        className="w-96"
+        className="w-96 max-w-full"
         innerRef={urlRef}
         error={errors.url?.message}
         {...urlRest}
@@ -94,7 +94,7 @@ function LoadingButtonText({ isLoading }: { isLoading: boolean }) {
   const [index, setIndex] = useState(0);
   const loadingText = [
     "Checking out the job...",
-    "Inspecting your resume...",
+    "Inspecting resume...",
     "Creating feedback...",
   ];
 

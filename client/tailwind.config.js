@@ -10,6 +10,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      spacing: {
+        "5vw": "5vw", // pull featured sections and navbar in the margin
+        "10vw": "10vw", // page margin
+      },
+      maxWidth: {
+        "page": "96rem",
+      },
       keyframes: {
         "slow-pulse-start": {
           "0%": { opacity: 1 },
